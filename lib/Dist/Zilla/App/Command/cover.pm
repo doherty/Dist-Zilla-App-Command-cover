@@ -28,7 +28,7 @@ sub execute {
     # local $ENV{RELEASE_TESTING} = 1;
 
     $zilla->ensure_built_in($target);
-    my $error = $self->zilla->run_tests_in($target);
+    $self->zilla->run_tests_in($target);
 
     $self->log(join ' ' => @cover_command);
     local $CWD = $target;
