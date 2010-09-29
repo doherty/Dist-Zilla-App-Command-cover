@@ -37,8 +37,6 @@ sub execute {
 }
 1;
 
-=pod
-
 =head1 SYNOPSIS
 
     # dzil cover -outputdir /my/dir
@@ -53,4 +51,3 @@ If there were any test errors, the C<cover> command won't be run. Author and
 release tests are not run since they should not be counted against code
 coverage. Any additional command-line arguments are passed to the C<cover>
 command.
-
