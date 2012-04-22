@@ -13,13 +13,19 @@ use Browser::Open qw( open_browser );
 sub abstract { "code coverage metrics for your distribution" }
 
 sub opt_spec {
-    [ 'open' => 'open the coverage results in a browser' ],
+    [ 'cover_args=s' => 'arguments to pass to cover command',
+        { Default => '' } ],
+    [ 'open'         => 'open the coverage results in a browser'    ],
+}
+
+sub validate_args {
+    my ($self, $opt, $args) = @_;
+    $self->usage_error("unknown arguments @$args") if @$args != 0;
 }
 
 sub execute {
-    my ($self, $opt, $arg) = @_;
+    my ($self, $opt, $args) = @_;
     local $ENV{HARNESS_PERL_SWITCHES} = '-MDevel::Cover';
-    my @cover_command = ('cover', @$arg);
 
     # adapted from the 'test' command
     my $zilla = $self->zilla;
@@ -35,10 +41,10 @@ sub execute {
     $zilla->ensure_built_in($target);
     $self->zilla->run_tests_in($target);
 
-
-    $self->log(join ' ' => @cover_command);
+    my $cover_command = 'cover ' . $opt->cover_args;
+    $self->log($cover_command);
     local $CWD = $target;
-    system @cover_command;
+    system $cover_command;
     $self->log("leaving $target intact");
 
     if ($opt->open) {
@@ -49,7 +55,7 @@ sub execute {
 
 =head1 SYNOPSIS
 
-    # dzil cover -outputdir /my/dir
+    # dzil cover --cover_args='-outputdir /my/dir' --open
 
 =head1 DESCRIPTION
 
@@ -59,5 +65,14 @@ L<Devel::Cover>.
 
 If there were any test errors, the C<cover> command won't be run. Author and
 release tests are not run since they should not be counted against code
-coverage. Any additional command-line arguments are passed to the C<cover>
-command.
+coverage.
+
+=head1 ARGUMENTS
+
+=item --cover_args="<args>"
+
+Arguments to pass to the cover command.
+
+=item --open
+
+Open the coverage results in a browser.
