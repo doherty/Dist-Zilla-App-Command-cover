@@ -9,12 +9,17 @@ use Dist::Zilla::App -command;
 use File::Temp;
 use Path::Class;
 use File::chdir;
+use Browser::Open qw( open_browser );
 sub abstract { "code coverage metrics for your distribution" }
 
+sub opt_spec {
+    [ 'open' => 'open the coverage results in a browser' ],
+}
+
 sub execute {
-    my $self = shift;
+    my ($self, $opt, $arg) = @_;
     local $ENV{HARNESS_PERL_SWITCHES} = '-MDevel::Cover';
-    my @cover_command = @ARGV;
+    my @cover_command = ('cover', @$arg);
 
     # adapted from the 'test' command
     my $zilla = $self->zilla;
@@ -30,10 +35,15 @@ sub execute {
     $zilla->ensure_built_in($target);
     $self->zilla->run_tests_in($target);
 
+
     $self->log(join ' ' => @cover_command);
     local $CWD = $target;
     system @cover_command;
     $self->log("leaving $target intact");
+
+    if ($opt->open) {
+        open_browser("cover_db/coverage.html", 1);
+    }
 }
 1;
 
