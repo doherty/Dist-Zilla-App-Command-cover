@@ -1,6 +1,8 @@
 Revision history for Perl extension {{$dist->name}}
 
 {{$NEXT}}
+
+1.101001  2012-05-30
   - New maintainer: Mike Doherty <doherty@cpan.org>
   - fixed POD
   - Load modules at runtime instead of compile time [RT #72144; dolmen]
