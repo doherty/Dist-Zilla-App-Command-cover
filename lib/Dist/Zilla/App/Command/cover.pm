@@ -1,14 +1,34 @@
+package Dist::Zilla::App::Command::cover;
 use 5.008;
 use strict;
 use warnings;
-
-package Dist::Zilla::App::Command::cover;
-
 # ABSTRACT: Code coverage metrics for your distribution
+# VERSION
+
 use Dist::Zilla::App -command;
 use File::Temp;
 use Path::Class;
 use File::chdir;
+
+=head1 SYNOPSIS
+
+    # dzil cover -outputdir /my/dir
+
+=head1 DESCRIPTION
+
+This is a command plugin for L<Dist::Zilla>. It provides the C<cover> command,
+which generates code coverage metrics for your distribution using
+L<Devel::Cover>.
+
+If there were any test errors, the C<cover> command won't be run. Author and
+release tests are not run since they should not be counted against code
+coverage. Any additional command-line arguments are passed to the C<cover>
+command.
+
+=for Pod::Coverage abstract execute
+
+=cut
+
 sub abstract { "code coverage metrics for your distribution" }
 
 sub execute {
@@ -35,19 +55,5 @@ sub execute {
     system @cover_command;
     $self->log("leaving $target intact");
 }
+
 1;
-
-=head1 SYNOPSIS
-
-    # dzil cover -outputdir /my/dir
-
-=head1 DESCRIPTION
-
-This is a command plugin for L<Dist::Zilla>. It provides the C<cover> command,
-which generates code coverage metrics for your distribution using
-L<Devel::Cover>.
-
-If there were any test errors, the C<cover> command won't be run. Author and
-release tests are not run since they should not be counted against code
-coverage. Any additional command-line arguments are passed to the C<cover>
-command.
