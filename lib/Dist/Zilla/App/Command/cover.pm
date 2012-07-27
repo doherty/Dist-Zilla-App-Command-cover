@@ -9,7 +9,7 @@ use Dist::Zilla::App -command;
 
 =head1 SYNOPSIS
 
-    # dzil cover -outputdir /my/dir
+    # dzil cover -launch
 
 =head1 DESCRIPTION
 
