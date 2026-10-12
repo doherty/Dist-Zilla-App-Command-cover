@@ -28,14 +28,22 @@ command.
 
 sub abstract { "code coverage metrics for your distribution" }
 
+sub opt_spec {
+    return (
+        {
+            getopt_conf => ['pass_through'],
+        },
+    );
+}
+
 sub execute {
-    my $self = shift;
+    my ( $self, $opt, $args ) = @_;
     require File::Temp;
     require Path::Class;
     require File::chdir;
 
     local $ENV{HARNESS_PERL_SWITCHES} = '-MDevel::Cover';
-    my @cover_command = @ARGV;
+    my @cover_command = ( cover => @$args );
 
     # adapted from the 'test' command
     my $zilla = $self->zilla;
